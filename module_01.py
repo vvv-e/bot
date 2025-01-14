@@ -1,15 +1,22 @@
+# Домашнее задание по теме "Хендлеры обработки сообщений"
+
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 import asyncio
 
-api = "ключ для подключения к боту"
+api = "При отправке вашего кода на GitHub не забудьте убрать ключ для подключения к вашему боту!"
 bot = Bot(token=api)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 
+@dp.message_handler(commands=['start'])
+async def all_massages(message):
+    print("Привет! Я бот помогающий твоему здоровью.")
+
+
 @dp.message_handler()
-async def all_message(message):
-    print(f"Мы получили сообщение {message}")
+async def all_massages(message):
+    print("Введите команду /start, чтобы начать общение.")
 
 
 if __name__ == "__main__":
