@@ -3,9 +3,11 @@
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.dispatcher import FSMContext
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.dispatcher import FSMContext
 import asyncio
+
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 api = "При отправке вашего кода на GitHub не забудьте убрать ключ для подключения к вашему боту!"
 bot = Bot(token=api)
@@ -18,9 +20,16 @@ class UserState(StatesGroup):
     weight = State()  # вес
 
 
+kb = ReplyKeyboardMarkup(resize_keyboard=True)
+btn_calc = KeyboardButton(text="Рассчитать")
+btn_info = KeyboardButton(text="Информация")
+kb.add(btn_calc)
+kb.add(btn_info)
+
+
 @dp.message_handler(commands=['start'])
 async def all_massages(message):
-    await message.answer("Привет! Я бот помогающий твоему здоровью.")
+    await message.answer("Привет! Я бот помогающий твоему здоровью.", reply_markup=kb)
 
 
 @dp.message_handler(text="Рассчитать")
@@ -47,8 +56,11 @@ async def set_growth(message, state):
 async def set_growth(message, state):
     await state.update_data(weight=message.text)
     data = await state.get_data()
-    await message.answer(
-        f"Ваша норма калорий:{10 * int(data['weight']) + 6.25 * int(data['growth']) - 5 * int(data['age']) + 5}")
+    try:
+        await message.answer(
+            f"Ваша норма калорий:{10 * int(data['weight']) + 6.25 * int(data['growth']) - 5 * int(data['age']) + 5}")
+    except:
+        await message.answer(f"Что-то пошло не так, возможно введены не числовые значения.")
     await state.finish()
 
 

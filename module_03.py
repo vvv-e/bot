@@ -46,9 +46,13 @@ async def set_growth(message, state):
 async def set_growth(message, state):
     await state.update_data(weight=message.text)
     data = await state.get_data()
-    await message.answer(
-        f"Ваша норма калорий:{10 * int(data['weight']) + 6.25 * int(data['growth']) - 5 * int(data['age']) + 5}")
+    try:
+        await message.answer(
+            f"Ваша норма калорий:{10 * int(data['weight']) + 6.25 * int(data['growth']) - 5 * int(data['age']) + 5}")
+    except:
+        await message.answer(f"Что-то пошло не так, возможно введены не числовые значения.")
     await state.finish()
+
 
 if __name__ == "__main__":
     executor.start_polling(dp, skip_updates=True)
