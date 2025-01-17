@@ -77,7 +77,7 @@ async def send_calories(message, state):
     data = await state.get_data()
     try:
         await message.answer(
-            f"Ваша норма калорий:{10 * int(data['weight']) + 6.25 * int(data['growth']) - 5 * int(data['age']) + 5}")
+            f"Ваша норма калорий: {10 * int(data['weight']) + 6.25 * int(data['growth']) - 5 * int(data['age']) + 5}")
     except:
         await message.answer(f"Что-то пошло не так, возможно введены не числовые значения.")
     await state.finish()
