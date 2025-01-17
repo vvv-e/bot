@@ -10,12 +10,12 @@ dp = Dispatcher(bot, storage=MemoryStorage())
 
 
 @dp.message_handler(commands=['start'])
-async def massages_one(message):
+async def start(message):
     await message.answer("Привет! Я бот помогающий твоему здоровью.")
 
 
 @dp.message_handler()
-async def massages_two(message):
+async def all_massages(message):
     await message.answer("Введите команду /start, чтобы начать общение.")
 
 

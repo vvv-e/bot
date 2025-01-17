@@ -28,7 +28,7 @@ kb.add(btn_info)
 
 
 @dp.message_handler(commands=['start'])
-async def hello(message):
+async def start(message):
     await message.answer("Привет! Я бот помогающий твоему здоровью.", reply_markup=kb)
 
 
@@ -53,7 +53,7 @@ async def get_weight(message, state):
 
 
 @dp.message_handler(state=UserState.weight)
-async def norm_calories(message, state):
+async def send_calories(message, state):
     await state.update_data(weight=message.text)
     data = await state.get_data()
     try:
