@@ -18,7 +18,7 @@ class UserState(StatesGroup):
 
 
 @dp.message_handler(commands=['start'])
-async def all_massages(message):
+async def hello(message):
     await message.answer("Привет! Я бот помогающий твоему здоровью.")
 
 
@@ -29,21 +29,21 @@ async def get_age(message):
 
 
 @dp.message_handler(state=UserState.age)
-async def set_growth(message, state):
+async def get_growth(message, state):
     await state.update_data(age=message.text)
     await message.answer("Введите свой рост:")
     await UserState.growth.set()
 
 
 @dp.message_handler(state=UserState.growth)
-async def set_growth(message, state):
+async def get_weight(message, state):
     await state.update_data(growth=message.text)
     await message.answer("Введите свой вес:")
     await UserState.weight.set()
 
 
 @dp.message_handler(state=UserState.weight)
-async def set_growth(message, state):
+async def norm_calories(message, state):
     await state.update_data(weight=message.text)
     data = await state.get_data()
     try:
