@@ -10,7 +10,7 @@ import asyncio
 
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-api = "При отправке вашего кода на GitHub не забудьте убрать ключ для подключения к вашему боту!"
+api = "7086380332:AAH2ULiaxQS6SRcG_Csc82KIMDs1T1PZQHg" # "При отправке вашего кода на GitHub не забудьте убрать ключ для подключения к вашему боту!"
 bot = Bot(token=api)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
