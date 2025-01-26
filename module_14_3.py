@@ -1,4 +1,4 @@
-# Домашнее задание по теме "Инлайн клавиатуры".
+# Домашнее задание по теме "Доработка бота"
 
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
