@@ -23,8 +23,10 @@ class UserState(StatesGroup):
 
 kb = ReplyKeyboardMarkup(resize_keyboard=True)
 btn_calc = KeyboardButton(text="Рассчитать")
+btn_buy = KeyboardButton(text="Купить")
 btn_info = KeyboardButton(text="Информация")
 kb.add(btn_calc)
+kb.add(btn_buy)
 kb.add(btn_info)
 
 kbi = InlineKeyboardMarkup(resize_keyboard=True)
@@ -32,6 +34,16 @@ btn_calories = InlineKeyboardButton(text="Рассчитать норму кал
 btn_formula = InlineKeyboardButton(text="Формулы расчёта", callback_data="formulas")
 kbi.add(btn_calories)
 kbi.add(btn_formula)
+
+kbi_buy = InlineKeyboardMarkup(resize_keyboard=True)
+btn_product1 = InlineKeyboardButton(text="Product1", callback_data="product_buying")
+btn_product2 = InlineKeyboardButton(text="Product2", callback_data="product_buying")
+btn_product3 = InlineKeyboardButton(text="Product3", callback_data="product_buying")
+btn_product4 = InlineKeyboardButton(text="Product4", callback_data="product_buying")
+kbi_buy.add(btn_product1)
+kbi_buy.add(btn_product2)
+kbi_buy.add(btn_product3)
+kbi_buy.add(btn_product4)
 
 
 @dp.message_handler(commands=['start'])
@@ -42,6 +54,23 @@ async def start(message):
 @dp.message_handler(text="Рассчитать")
 async def main_menu(message):
     await message.answer("Выберите опцию:", reply_markup=kbi)
+
+
+@dp.message_handler(text="Купить")
+async def get_buying_list(message):
+    for i in range(4):
+        await message.answer(f"Название: Product{i}")
+        await message.answer(f"Описание: описание {i}")
+        await message.answer(f"Цена: {i * 100}")
+        with open(f"photo/img{i}.jpg", "rb") as photo:
+            await message.answer_photo(photo)
+    await message.answer("Выберите продукт для покупки:", reply_markup=kbi_buy)
+
+
+@dp.callback_query_handler(text="product_buying")
+async def send_confirm_message(call):
+    await call.message.answer("Вы успешно приобрели продукт!")
+    await call.answer()
 
 
 @dp.callback_query_handler(text="formulas")
