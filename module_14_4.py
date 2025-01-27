@@ -1,4 +1,4 @@
-# Домашнее задание по теме "Доработка бота"
+# Домашнее задание по теме "План написания админ панели"
 
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -7,6 +7,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.dispatcher import FSMContext
 import asyncio
+from crud_functions import get_all_products
 
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
