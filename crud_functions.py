@@ -23,7 +23,7 @@ def get_all_products():
     # Выборку всех записей при помощи fetchall(), где возраст не равен 60
     conn = sqlite3.connect("bot.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM Products ORDER BY id")
+    cursor.execute("SELECT id, title, description, price FROM Products ORDER BY id")
     rows = cursor.fetchall()
     conn.close()
     return rows
