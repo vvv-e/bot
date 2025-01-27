@@ -8,8 +8,10 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.dispatcher import FSMContext
 import asyncio
 from crud_functions import get_all_products
-
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+
+# получить список продуктов из БД
+products = get_all_products()
 
 api = "При отправке вашего кода на GitHub не забудьте убрать ключ для подключения к вашему боту!"
 bot = Bot(token=api)
@@ -59,9 +61,9 @@ async def main_menu(message):
 
 @dp.message_handler(text="Купить")
 async def get_buying_list(message):
-    for i in range(4):
-        await message.answer(f"Название: Product{i} | Описание: описание {i} | Цена: {i * 100}")
-        with open(f"photo/img{i}.jpg", "rb") as photo:
+    for prod in products:
+        await message.answer(f"Название: {prod[1]} | Описание: {prod[2]} | Цена: {prod[3]}")
+        with open(f"photo/img{prod[0]-1}.jpg", "rb") as photo:
             await message.answer_photo(photo)
     await message.answer("Выберите продукт для покупки:", reply_markup=kbi_buy)
 
