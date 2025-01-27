@@ -59,9 +59,7 @@ async def main_menu(message):
 @dp.message_handler(text="Купить")
 async def get_buying_list(message):
     for i in range(4):
-        await message.answer(f"Название: Product{i}")
-        await message.answer(f"Описание: описание {i}")
-        await message.answer(f"Цена: {i * 100}")
+        await message.answer(f"Название: Product{i} | Описание: описание {i} | Цена: {i * 100}")
         with open(f"photo/img{i}.jpg", "rb") as photo:
             await message.answer_photo(photo)
     await message.answer("Выберите продукт для покупки:", reply_markup=kbi_buy)
