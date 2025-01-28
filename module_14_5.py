@@ -85,7 +85,7 @@ async def send_confirm_message(call):
 
 @dp.callback_query_handler(text="formulas")
 async def get_formulas(call):
-    await call.message.answer("Формула Миффлина-Сан Жеора: 10 х вес (кг) + 6,25 x рост (см) – 5 х возраст (г) + 5.")
+    await call.message.answer("Формула Миффлина-Сан Жеора: 10 х вес (кг) + 6,25 x рост (см) – 5 х возраст (г) + 5.", reply_markup=kb)
     await call.answer()
 
 
@@ -116,7 +116,7 @@ async def send_calories(message, state):
     data = await state.get_data()
     try:
         await message.answer(
-            f"Ваша норма калорий: {10 * int(data['weight']) + 6.25 * int(data['growth']) - 5 * int(data['age']) + 5}")
+            f"Ваша норма калорий: {10 * int(data['weight']) + 6.25 * int(data['growth']) - 5 * int(data['age']) + 5}", reply_markup=kb)
     except:
         await message.answer(f"Что-то пошло не так, возможно введены не числовые значения.")
     await state.finish()
@@ -130,9 +130,13 @@ async def sing_up(message):
 
 @dp.message_handler(state=RegistrationState.username)
 async def set_username(message, state):
-    await state.update_data(username=message.text)
-    await message.answer("Введите свой email:")
-    await RegistrationState.email.set()
+    if not is_included(message.text):
+        await state.update_data(username=message.text)
+        await message.answer("Введите свой email:")
+        await RegistrationState.email.set()
+    else:
+        await message.answer("Пользователь существует, введите другое имя:")
+        await RegistrationState.username.set()
 
 
 @dp.message_handler(state=RegistrationState.email)
@@ -142,14 +146,15 @@ async def set_email(message, state):
     await RegistrationState.age.set()
 
 
-@dp.message_handler(state=UserState.age)
+@dp.message_handler(state=RegistrationState.age)
 async def set_age(message, state):
     await state.update_data(age=message.text)
     data = await state.get_data()
     try:
-        add_user(data['username'], data['email'], data['age'])
+        add_user(data['username'], data['email'], int(data['age']))
+        await message.answer(f"Пользователь {data['username']} занесен в таблицу Users.", reply_markup=kb)
     except:
-        await message.answer(f"Что-то пошло не так, данные не занесены в таблицу Users.")
+        await message.answer("Что-то пошло не так, данные не занесены в таблицу Users.", reply_markup=kb)
     await state.finish()
 
 
