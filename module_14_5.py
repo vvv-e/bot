@@ -1,4 +1,4 @@
-# Домашнее задание по теме "План написания админ панели"
+# Домашнее задание по теме "Написание примитивной ORM"
 
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
