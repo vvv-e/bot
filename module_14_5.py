@@ -7,7 +7,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.dispatcher import FSMContext
 import asyncio
-from crud_functions import get_all_products
+from crud_functions import get_all_products, is_included, add_user
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 # получить список продуктов из БД
@@ -24,12 +24,21 @@ class UserState(StatesGroup):
     weight = State()  # вес
 
 
+class RegistrationState(StatesGroup):
+    username = State()  # имя
+    email = State()  # эл.почта
+    age = State()  # возраст
+    balance = 1000  # баланс
+
+
 kb = ReplyKeyboardMarkup(resize_keyboard=True)
 btn_calc = KeyboardButton(text="Рассчитать")
 btn_buy = KeyboardButton(text="Купить")
+btn_reg = KeyboardButton(text="Регистрация")
 btn_info = KeyboardButton(text="Информация")
 kb.add(btn_calc)
 kb.add(btn_buy)
+kb.add(btn_reg)
 kb.add(btn_info)
 
 kbi = InlineKeyboardMarkup(resize_keyboard=True)
@@ -63,7 +72,7 @@ async def main_menu(message):
 async def get_buying_list(message):
     for prod in products:
         await message.answer(f"Название: {prod[1]} | Описание: {prod[2]} | Цена: {prod[3]}")
-        with open(f"photo/img{prod[0]-1}.jpg", "rb") as photo:
+        with open(f"photo/img{prod[0] - 1}.jpg", "rb") as photo:
             await message.answer_photo(photo)
     await message.answer("Выберите продукт для покупки:", reply_markup=kbi_buy)
 
@@ -110,6 +119,37 @@ async def send_calories(message, state):
             f"Ваша норма калорий: {10 * int(data['weight']) + 6.25 * int(data['growth']) - 5 * int(data['age']) + 5}")
     except:
         await message.answer(f"Что-то пошло не так, возможно введены не числовые значения.")
+    await state.finish()
+
+
+@dp.message_handler(text="Регистрация")
+async def sing_up(message):
+    await message.answer("Введите имя пользователя (только латинский алфавит):")
+    await RegistrationState.username.set()
+
+
+@dp.message_handler(state=RegistrationState.username)
+async def set_username(message, state):
+    await state.update_data(username=message.text)
+    await message.answer("Введите свой email:")
+    await RegistrationState.email.set()
+
+
+@dp.message_handler(state=RegistrationState.email)
+async def set_email(message, state):
+    await state.update_data(email=message.text)
+    await message.answer("Введите свой возраст:")
+    await RegistrationState.age.set()
+
+
+@dp.message_handler(state=UserState.age)
+async def set_age(message, state):
+    await state.update_data(age=message.text)
+    data = await state.get_data()
+    try:
+        add_user(data['username'], data['email'], data['age'])
+    except:
+        await message.answer(f"Что-то пошло не так, данные не занесены в таблицу Users.")
     await state.finish()
 
 
